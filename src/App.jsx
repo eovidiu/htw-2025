@@ -4,6 +4,7 @@ import TextCapture from './components/TextCapture';
 import PhotoCapture from './components/PhotoCapture';
 import ContentFeed from './components/ContentFeed';
 import PhotoViewer from './components/PhotoViewer';
+import ExportButton from './components/ExportButton';
 import { loadCaptures, addCapture, updateCapture, deleteCapture as deleteStorageCapture, reorderCaptures } from './utils/storage';
 import { savePhoto, deletePhoto } from './utils/indexedDB';
 import { compressImage } from './utils/imageCompression';
@@ -102,6 +103,8 @@ function App() {
       <CaptureButtons onAddText={handleAddText} onAddPhoto={handleAddPhoto} />
 
       <div className="px-4">
+        <ExportButton captures={captures} />
+
         <ContentFeed
           captures={captures}
           onEdit={handleEdit}

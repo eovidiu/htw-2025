@@ -1,4 +1,6 @@
 // localStorage utilities for text content and app state
+import { sanitizeCapture } from './sanitize';
+
 const STORAGE_KEY = 'conference-captures';
 
 export const loadCaptures = () => {
@@ -26,10 +28,11 @@ export const saveCaptures = (captures) => {
 
 export const addCapture = (capture) => {
   const captures = loadCaptures();
+  const sanitizedCapture = sanitizeCapture(capture);
   const newCapture = {
-    id: Date.now().toString(),
+    id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     timestamp: new Date().toISOString(),
-    ...capture
+    ...sanitizedCapture
   };
   captures.unshift(newCapture);
   saveCaptures(captures);
@@ -40,7 +43,8 @@ export const updateCapture = (id, updates) => {
   const captures = loadCaptures();
   const index = captures.findIndex(c => c.id === id);
   if (index !== -1) {
-    captures[index] = { ...captures[index], ...updates };
+    const sanitizedUpdates = sanitizeCapture(updates);
+    captures[index] = { ...captures[index], ...sanitizedUpdates };
     saveCaptures(captures);
     return captures[index];
   }

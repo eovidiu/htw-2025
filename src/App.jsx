@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ErrorBoundary from './components/ErrorBoundary';
 import CaptureButtons from './components/CaptureButtons';
 import TextCapture from './components/TextCapture';
 import PhotoCapture from './components/PhotoCapture';
@@ -98,40 +99,44 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <CaptureButtons onAddText={handleAddText} onAddPhoto={handleAddPhoto} />
+    <ErrorBoundary>
+      <div className="min-h-screen bg-gray-50">
+        <CaptureButtons onAddText={handleAddText} onAddPhoto={handleAddPhoto} />
 
-      <div className="px-4">
-        <ContentFeed
-          captures={captures}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onReorder={handleReorder}
-          onPhotoClick={handlePhotoClick}
-        />
+        <div className="px-4">
+          <ErrorBoundary>
+            <ContentFeed
+              captures={captures}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onReorder={handleReorder}
+              onPhotoClick={handlePhotoClick}
+            />
+          </ErrorBoundary>
+        </div>
+
+        {showTextCapture && (
+          <TextCapture
+            onSave={handleSaveText}
+            onCancel={() => setShowTextCapture(false)}
+          />
+        )}
+
+        {showPhotoCapture && (
+          <PhotoCapture
+            onCapture={handlePhotoCapture}
+            onCancel={() => setShowPhotoCapture(false)}
+          />
+        )}
+
+        {viewingPhoto && (
+          <PhotoViewer
+            photoUrl={viewingPhoto}
+            onClose={() => setViewingPhoto(null)}
+          />
+        )}
       </div>
-
-      {showTextCapture && (
-        <TextCapture
-          onSave={handleSaveText}
-          onCancel={() => setShowTextCapture(false)}
-        />
-      )}
-
-      {showPhotoCapture && (
-        <PhotoCapture
-          onCapture={handlePhotoCapture}
-          onCancel={() => setShowPhotoCapture(false)}
-        />
-      )}
-
-      {viewingPhoto && (
-        <PhotoViewer
-          photoUrl={viewingPhoto}
-          onClose={() => setViewingPhoto(null)}
-        />
-      )}
-    </div>
+    </ErrorBoundary>
   );
 }
 

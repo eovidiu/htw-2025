@@ -8,24 +8,28 @@ const CaptureItem = ({ capture, onEdit, onDelete, onPhotoClick }) => {
   const [editTags, setEditTags] = useState(capture.tags?.join(', ') || '');
 
   useEffect(() => {
-    if (capture.type === 'photo' && capture.photoId) {
-      loadPhoto();
-    }
+    let isMounted = true;
 
-    return () => {
-      if (photoUrl) {
-        URL.revokeObjectURL(photoUrl);
+    const loadPhoto = async () => {
+      if (capture.type === 'photo' && capture.photoId) {
+        const blob = await getPhoto(capture.photoId);
+        if (blob && isMounted) {
+          const url = URL.createObjectURL(blob);
+          setPhotoUrl(url);
+        }
       }
     };
-  }, [capture.photoId]);
 
-  const loadPhoto = async () => {
-    const blob = await getPhoto(capture.photoId);
-    if (blob) {
-      const url = URL.createObjectURL(blob);
-      setPhotoUrl(url);
-    }
-  };
+    loadPhoto();
+
+    return () => {
+      isMounted = false;
+      if (photoUrl) {
+        URL.revokeObjectURL(photoUrl);
+        setPhotoUrl(null);
+      }
+    };
+  }, [capture.photoId, capture.type]);
 
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);

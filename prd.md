@@ -17,10 +17,11 @@ Conference attendees struggle to capture and organize valuable content during se
 
 ## Target Users
 
-- Conference attendees
+- Conference attendees (specifically How to Web 2025)
 - Event participants
 - Workshop learners
 - Anyone needing quick content capture in live settings
+- Professionals seeking to provide structured feedback on sessions
 
 ## Core Features
 
@@ -33,6 +34,8 @@ Conference attendees struggle to capture and organize valuable content during se
 - Direct camera access for photo capture
 - Upload photos from device library
 - Timestamp automatically added to each capture
+- **File size validation: 15 MB maximum per image**
+- **Concurrent capture limit: Maximum 5 items processing simultaneously**
 
 ### 2. Content Organization
 
@@ -69,13 +72,34 @@ Conference attendees struggle to capture and organize valuable content during se
 - Automatic save on every action
 - No account creation required for basic use
 
-### 6. Export Capabilities
+### 6. Session & Speaker Feedback
+
+**Priority: P0**
+
+- **How to Web 2025 specific feedback system**
+  - Pre-loaded conference agenda (100+ sessions, 4 stages)
+  - Browse and search sessions by day, stage, speaker, or topic
+  - 5-star rating system for:
+    - Overall session quality (required)
+    - Speaker performance (required)
+    - Content relevance (optional)
+    - Presentation style (optional)
+  - Written feedback field (optional, 500 char max)
+  - “Would recommend” toggle
+  - Link feedback to captured notes/photos
+  - View and edit submitted feedback
+  - Include feedback in PDF exports
+- Session data stored locally with ratings and comments
+- Smart prompts after session attendance
+
+### 7. Export Capabilities
 
 **Priority: P0** *(PDF export elevated to P0)*
 
 - **Export session as PDF with text and photos** *(P0 - Primary export)*
   - Button positioned below first record in feed
   - Includes all text snippets and embedded photos
+  - **Includes session feedback and ratings**
   - Header with session name, export date, and item count
   - Maintains chronological order with timestamps
   - Professional formatting with proper page breaks
@@ -83,6 +107,7 @@ Conference attendees struggle to capture and organize valuable content during se
 - Export as markdown file *(P1)*
 - Download all photos as zip file *(P1)*
 - Copy all text to clipboard *(P1)*
+- **Export feedback separately as CSV/JSON** *(P1)*
 
 ## Non-Goals (Out of Scope)
 
@@ -102,6 +127,10 @@ Conference attendees struggle to capture and organize valuable content during se
 - Supports up to 500 items per session
 - Photos compressed to max 2MB each
 - PDF generation completes in < 10 seconds for typical session (20-30 items)
+- File size validation is instant (synchronous check)
+- Concurrent limit check has zero performance overhead
+- Session list loads instantly from local storage
+- Feedback form submission completes in < 500ms
 
 ### Compatibility
 
@@ -113,14 +142,18 @@ Conference attendees struggle to capture and organize valuable content during se
 
 ### Storage
 
-- Uses browser localStorage for text
+- Uses browser localStorage for text, feedback, and session data
 - Uses IndexedDB for photos
 - Graceful handling when storage quota reached
+- **Maximum file size enforced: 15 MB per image**
+- **Maximum concurrent operations: 5 simultaneous captures**
+- Pre-loaded How to Web 2025 agenda (100+ sessions)
 
 ### Dependencies
 
 - jsPDF or html2pdf.js for PDF generation
 - Image compression library (browser-image-compression or canvas API)
+- How to Web 2025 session data (JSON format)
 
 ## User Flow
 
@@ -149,6 +182,17 @@ Conference attendees struggle to capture and organize valuable content during se
 1. PDF downloads automatically to device
 1. Success message confirms download
 
+### Quaternary Flow: Rating Sessions
+
+1. User attends a session and captures notes/photos
+1. After 30+ minutes, prompt appears: “Rate this session?”
+1. User taps to open feedback form with session details pre-filled
+1. User provides required ratings (overall + speaker)
+1. Optionally adds written feedback and recommendation
+1. Submits feedback (saved locally)
+1. Feedback linked to captured content from that session
+1. Can view/edit feedback later from session list
+
 ## Success Metrics
 
 - Time from app open to first capture < 3 seconds
@@ -156,6 +200,11 @@ Conference attendees struggle to capture and organize valuable content during se
 - 70% of users create multiple sessions
 - < 5% data loss rate
 - 60% of users export their content
+- **< 1% of users encounter file size limit errors** (indicates good UX education)
+- **Zero app crashes due to concurrent operations**
+- **60%+ of users submit at least one session feedback**
+- **Average 3+ sessions rated per active user**
+- **80%+ feedback form completion rate** (users who start, finish)
 
 ## Design Principles
 
@@ -163,6 +212,8 @@ Conference attendees struggle to capture and organize valuable content during se
 - **Forgiving**: Easy undo, auto-save everything
 - **Distraction-free**: Minimal UI during capture mode
 - **Mobile-first**: Design for one-handed phone use
+- **Protective**: Clear limits prevent performance issues and data loss
+- **Transparent**: Always show processing status and limitations
 
 ## Open Questions
 
@@ -175,9 +226,10 @@ Conference attendees struggle to capture and organize valuable content during se
 
 - **Week 1-2**: Core capture interface (text + photo)
 - **Week 3**: Content feed and basic organization
-- **Week 4**: Session management
-- **Week 5**: Export functionality
-- **Week 6**: Polish, testing, and bug fixes
+- **Week 4**: Session management and feedback system
+- **Week 5**: Export functionality (PDF with feedback)
+- **Week 6**: App protection limits
+- **Week 7**: Polish, testing, and bug fixes
 
 ## Future Considerations (v2+)
 
@@ -187,3 +239,8 @@ Conference attendees struggle to capture and organize valuable content during se
 - Voice note support
 - Desktop app version
 - Template quick captures (e.g., “Key Quote”, “Action Item”)
+- Anonymous feedback submission
+- Aggregated session ratings (if shared publicly)
+- Cross-conference support (expand beyond How to Web)
+- Integration with official conference platforms
+- Social features (share feedback with attendees)

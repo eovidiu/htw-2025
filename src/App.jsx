@@ -7,6 +7,9 @@ import PhotoViewer from './components/PhotoViewer';
 import ExportButton from './components/ExportButton';
 import ProcessingIndicator from './components/ProcessingIndicator';
 import ErrorModal from './components/ErrorModal';
+import FeedbackButton from './components/FeedbackButton';
+import SessionSelector from './components/SessionSelector';
+import FeedbackForm from './components/FeedbackForm';
 import { loadCaptures, addCapture, updateCapture, deleteCapture as deleteStorageCapture, reorderCaptures } from './utils/storage';
 import { savePhoto, deletePhoto } from './utils/indexedDB';
 import { compressImage } from './utils/imageCompression';
@@ -19,6 +22,9 @@ function App() {
   const [viewingPhoto, setViewingPhoto] = useState(null);
   const [queueState, setQueueState] = useState({ active: 0, max: 5, canAddMore: true });
   const [error, setError] = useState(null);
+  const [showSessionSelector, setShowSessionSelector] = useState(false);
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
+  const [selectedSession, setSelectedSession] = useState(null);
 
   useEffect(() => {
     // Load captures on mount
@@ -132,6 +138,23 @@ function App() {
     setViewingPhoto(photoUrl);
   };
 
+  const handleOpenSessionSelector = () => {
+    setShowSessionSelector(true);
+  };
+
+  const handleSelectSession = (session) => {
+    setSelectedSession(session);
+    setShowSessionSelector(false);
+    setShowFeedbackForm(true);
+  };
+
+  const handleFeedbackSubmit = () => {
+    setShowFeedbackForm(false);
+    setSelectedSession(null);
+    // Force re-render of FeedbackButton to update count
+    setCaptures([...captures]);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <CaptureButtons
@@ -143,6 +166,8 @@ function App() {
       />
 
       <div className="px-4">
+        <FeedbackButton onClick={handleOpenSessionSelector} />
+
         <ExportButton captures={captures} />
 
         <ContentFeed
@@ -172,6 +197,26 @@ function App() {
         <PhotoViewer
           photoUrl={viewingPhoto}
           onClose={() => setViewingPhoto(null)}
+        />
+      )}
+
+      {/* Session Selector */}
+      {showSessionSelector && (
+        <SessionSelector
+          onSelectSession={handleSelectSession}
+          onClose={() => setShowSessionSelector(false)}
+        />
+      )}
+
+      {/* Feedback Form */}
+      {showFeedbackForm && selectedSession && (
+        <FeedbackForm
+          session={selectedSession}
+          onSubmit={handleFeedbackSubmit}
+          onCancel={() => {
+            setShowFeedbackForm(false);
+            setSelectedSession(null);
+          }}
         />
       )}
 

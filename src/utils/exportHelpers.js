@@ -1,5 +1,6 @@
 import { jsPDF } from 'jspdf';
 import { getPhoto } from './indexedDB';
+import { getAllFeedback } from './feedbackStorage';
 
 /**
  * Format timestamp for PDF display
@@ -47,7 +48,7 @@ const calculateImageDimensions = (imgWidth, imgHeight, maxWidth, maxHeight) => {
 /**
  * Export captures to PDF
  */
-export const exportToPDF = async (captures, onProgress) => {
+export const exportToPDF = async (captures, onProgress, includeFeedback = true) => {
   try {
     if (!captures || captures.length === 0) {
       throw new Error('No captures to export');
@@ -65,10 +66,13 @@ export const exportToPDF = async (captures, onProgress) => {
     const contentWidth = pageWidth - (margin * 2);
     let yPosition = margin;
 
+    // Get feedback data
+    const allFeedback = includeFeedback ? getAllFeedback() : [];
+
     // Add header
     doc.setFontSize(20);
     doc.setFont('helvetica', 'bold');
-    doc.text('Conference Captures', margin, yPosition);
+    doc.text('How to Web 2025 - Conference Captures', margin, yPosition);
     yPosition += 10;
 
     doc.setFontSize(10);
@@ -76,8 +80,13 @@ export const exportToPDF = async (captures, onProgress) => {
     doc.setTextColor(100);
     doc.text(`Exported: ${formatTimestamp(new Date().toISOString())}`, margin, yPosition);
     yPosition += 5;
-    doc.text(`Total items: ${captures.length}`, margin, yPosition);
-    yPosition += 10;
+    doc.text(`Total captures: ${captures.length}`, margin, yPosition);
+    yPosition += 5;
+    if (allFeedback.length > 0) {
+      doc.text(`Session feedback: ${allFeedback.length}`, margin, yPosition);
+      yPosition += 5;
+    }
+    yPosition += 5;
 
     // Add separator line
     doc.setDrawColor(200);
@@ -190,6 +199,92 @@ export const exportToPDF = async (captures, onProgress) => {
       }
     }
 
+    // Add session feedback section if available
+    if (allFeedback.length > 0) {
+      // Add new page for feedback
+      doc.addPage();
+      yPosition = margin;
+
+      // Feedback section header
+      doc.setFontSize(18);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(0);
+      doc.text('Session Feedback', margin, yPosition);
+      yPosition += 10;
+
+      doc.setDrawColor(200);
+      doc.line(margin, yPosition, pageWidth - margin, yPosition);
+      yPosition += 10;
+
+      // Process each feedback
+      for (let i = 0; i < allFeedback.length; i++) {
+        const fb = allFeedback[i];
+
+        // Check if we need a new page
+        if (yPosition > pageHeight - 60) {
+          doc.addPage();
+          yPosition = margin;
+        }
+
+        // Session title
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(0);
+        const sessionTitle = doc.splitTextToSize(fb.sessionTitle, contentWidth);
+        doc.text(sessionTitle, margin, yPosition);
+        yPosition += sessionTitle.length * 6 + 3;
+
+        // Speaker info
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(100);
+        doc.text(`${fb.speakerName} • ${fb.speakerCompany} • ${fb.stage}`, margin, yPosition);
+        yPosition += 6;
+
+        // Ratings
+        doc.setFontSize(10);
+        doc.setTextColor(0);
+        doc.text(`Overall: ${'★'.repeat(fb.ratings.overall)}${'☆'.repeat(5 - fb.ratings.overall)}`, margin, yPosition);
+        yPosition += 5;
+        doc.text(`Speaker: ${'★'.repeat(fb.ratings.speaker)}${'☆'.repeat(5 - fb.ratings.speaker)}`, margin, yPosition);
+        yPosition += 5;
+
+        if (fb.ratings.content > 0) {
+          doc.text(`Content: ${'★'.repeat(fb.ratings.content)}${'☆'.repeat(5 - fb.ratings.content)}`, margin, yPosition);
+          yPosition += 5;
+        }
+
+        if (fb.ratings.presentation > 0) {
+          doc.text(`Presentation: ${'★'.repeat(fb.ratings.presentation)}${'☆'.repeat(5 - fb.ratings.presentation)}`, margin, yPosition);
+          yPosition += 5;
+        }
+
+        if (fb.recommend !== null) {
+          doc.text(`Recommend: ${fb.recommend ? 'Yes' : 'No'}`, margin, yPosition);
+          yPosition += 5;
+        }
+
+        // Written feedback
+        if (fb.feedback) {
+          yPosition += 3;
+          doc.setFontSize(9);
+          doc.setFont('helvetica', 'italic');
+          doc.setTextColor(60);
+          const feedbackLines = doc.splitTextToSize(fb.feedback, contentWidth);
+          doc.text(feedbackLines, margin, yPosition);
+          yPosition += feedbackLines.length * 5;
+        }
+
+        // Separator
+        yPosition += 5;
+        if (i < allFeedback.length - 1) {
+          doc.setDrawColor(220);
+          doc.line(margin, yPosition, pageWidth - margin, yPosition);
+          yPosition += 8;
+        }
+      }
+    }
+
     // Report completion
     if (onProgress) {
       onProgress(100);
@@ -197,7 +292,7 @@ export const exportToPDF = async (captures, onProgress) => {
 
     // Generate filename with timestamp
     const timestamp = new Date().toISOString().split('T')[0];
-    const filename = `conference-captures-${timestamp}.pdf`;
+    const filename = `htw-2025-captures-${timestamp}.pdf`;
 
     // Save PDF
     doc.save(filename);

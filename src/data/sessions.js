@@ -1,216 +1,217 @@
 // How to Web 2025 Conference Sessions
 // October 1-2, 2025 | Bucharest, Romania
+// NOTE: This contains only confirmed speakers. Full agenda at https://www.howtoweb.co/agenda-2025/
 
 export const HTW_2025_SESSIONS = [
-  // Day 1 - October 1, 2025
+  // Confirmed Speakers
   {
     id: "htw-001",
-    title: "Opening Keynote: The Future of Tech in Europe",
-    speaker: "Bogdan Iordache",
-    company: "How to Web",
-    stage: "Main Stage",
+    title: "Product Leadership & Innovation",
+    speaker: "Martin Eriksson",
+    company: "ProductTank (Founder)",
+    stage: "Build & Grow Stage",
     day: 1,
-    time: "09:00",
-    topics: ["Keynote", "Startups", "Innovation"]
+    time: "10:00",
+    topics: ["Product Management", "Leadership", "Innovation"]
   },
   {
     id: "htw-002",
-    title: "AI-Powered Product Development",
-    speaker: "Sarah Chen",
-    company: "Google Cloud",
-    stage: "AI & Innovation Stage",
+    title: "B2B Sales & Growth Strategies",
+    speaker: "Zoltan A. Vardy",
+    company: "B2B Sales & Growth Mentor",
+    stage: "Build & Grow Stage",
     day: 1,
-    time: "10:00",
-    topics: ["AI", "Product Development"]
+    time: "11:00",
+    topics: ["Sales", "B2B", "Growth"]
   },
   {
     id: "htw-003",
-    title: "Fundraising in 2025: What VCs Look For",
-    speaker: "Michael Ross",
-    company: "Sequoia Capital",
-    stage: "Founder Stage",
+    title: "Developer Experience & AI Integration",
+    speaker: "Tejas Kumar",
+    company: "IBM (Developer Advocate)",
+    stage: "Focus Stage",
     day: 1,
-    time: "10:00",
-    topics: ["Fundraising", "VC", "Startups"]
+    time: "14:00",
+    topics: ["Developer Experience", "AI", "Technology"]
   },
   {
     id: "htw-004",
-    title: "Building High-Performance Engineering Teams",
-    speaker: "Ana Popescu",
-    company: "Stripe",
-    stage: "Build & Grow Stage",
-    day: 1,
-    time: "10:00",
-    topics: ["Team Building", "Engineering", "Leadership"]
+    title: "Venture Capital & European Startups",
+    speaker: "Staffan Helgesson",
+    company: "Creandum (General Partner)",
+    stage: "Startup Stage",
+    day: 2,
+    time: "11:00",
+    topics: ["Venture Capital", "Investment", "Startups"]
   },
+
+  // Placeholder Sessions - To Be Announced
   {
     id: "htw-005",
-    title: "The GenAI Revolution in Enterprise",
-    speaker: "David Martinez",
-    company: "Microsoft",
-    stage: "AI & Innovation Stage",
+    title: "Opening Keynote",
+    speaker: "TBA",
+    company: "How to Web",
+    stage: "Broadcast Room",
     day: 1,
-    time: "11:00",
-    topics: ["AI", "Enterprise", "LLMs"]
+    time: "09:00",
+    topics: ["Keynote", "Conference Opening"]
   },
   {
     id: "htw-006",
-    title: "From Zero to Series A: A Founder's Journey",
-    speaker: "Emma Thompson",
-    company: "Notion",
-    stage: "Founder Stage",
+    title: "AI-Powered Innovation Session",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Focus Stage",
     day: 1,
     time: "11:00",
-    topics: ["Startups", "Fundraising", "Growth"]
+    topics: ["AI", "Innovation"]
   },
   {
     id: "htw-007",
-    title: "Product-Market Fit: Finding It and Keeping It",
-    speaker: "James Wilson",
-    company: "Figma",
-    stage: "Build & Grow Stage",
+    title: "Startup Funding Panel",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Startup Stage",
     day: 1,
-    time: "11:00",
-    topics: ["Product Management", "PMF", "Strategy"]
+    time: "10:00",
+    topics: ["Funding", "Startups"]
   },
   {
     id: "htw-008",
-    title: "Machine Learning at Scale",
-    speaker: "Priya Sharma",
-    company: "Meta",
-    stage: "AI & Innovation Stage",
+    title: "Engineering Excellence Workshop",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Build & Grow Stage",
     day: 1,
-    time: "14:00",
-    topics: ["AI", "Machine Learning", "Infrastructure"]
+    time: "15:00",
+    topics: ["Engineering", "Best Practices"]
   },
   {
     id: "htw-009",
-    title: "Building a Sustainable Startup Culture",
-    speaker: "Lars Nielsen",
-    company: "Spotify",
-    stage: "Founder Stage",
+    title: "Marketing & Growth Strategies",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Build & Grow Stage",
     day: 1,
-    time: "14:00",
-    topics: ["Culture", "Team Building", "Leadership"]
+    time: "16:00",
+    topics: ["Marketing", "Growth"]
   },
   {
     id: "htw-010",
-    title: "Growth Marketing in the Age of Privacy",
-    speaker: "Sophie Laurent",
-    company: "Shopify",
-    stage: "Build & Grow Stage",
+    title: "UX Design for AI Products",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Focus Stage",
     day: 1,
-    time: "14:00",
-    topics: ["Marketing", "Growth", "Privacy"]
+    time: "15:00",
+    topics: ["UX", "Design", "AI"]
   },
-
-  // Day 2 - October 2, 2025
   {
     id: "htw-011",
-    title: "Product-Led Growth for Complex Products",
-    speaker: "Aggelos Mouzakitis",
-    company: "IBM",
-    stage: "Build & Grow Stage",
-    day: 2,
-    time: "10:00",
-    topics: ["Product Management", "PLG", "SaaS"]
+    title: "Team Building & Culture",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Startup Stage",
+    day: 1,
+    time: "14:00",
+    topics: ["Team Building", "Culture"]
   },
   {
     id: "htw-012",
-    title: "Building Practical AI Tool Stacks",
-    speaker: "Ioana Teleanu",
-    company: "AI-R Design Studio",
-    stage: "AI & Innovation Stage",
-    day: 2,
-    time: "10:00",
-    topics: ["AI", "Product Development", "Tools"]
+    title: "Day 1 Closing Panel",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Broadcast Room",
+    day: 1,
+    time: "17:00",
+    topics: ["Panel", "Discussion"]
   },
   {
     id: "htw-013",
-    title: "Scaling from 1 to 100 Engineers",
-    speaker: "Marcus Schmidt",
-    company: "GitHub",
-    stage: "Founder Stage",
+    title: "Day 2 Opening Session",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Broadcast Room",
     day: 2,
-    time: "10:00",
-    topics: ["Team Building", "Engineering", "Scaling"]
+    time: "09:00",
+    topics: ["Keynote"]
   },
   {
     id: "htw-014",
-    title: "Scaling Value with LLMs",
-    speaker: "Andrew Mende",
-    company: "Booking.com",
-    stage: "AI & Innovation Stage",
+    title: "Product-Market Fit Strategies",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Build & Grow Stage",
     day: 2,
-    time: "11:00",
-    topics: ["AI", "Machine Learning", "LLMs"]
+    time: "10:00",
+    topics: ["Product", "Strategy"]
   },
   {
     id: "htw-015",
-    title: "Customer Success as a Growth Engine",
-    speaker: "Rachel Adams",
-    company: "Salesforce",
-    stage: "Build & Grow Stage",
+    title: "Investment Trends in Europe",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Startup Stage",
     day: 2,
-    time: "11:00",
-    topics: ["Customer Success", "Growth", "SaaS"]
+    time: "10:00",
+    topics: ["Investment", "Europe"]
   },
   {
     id: "htw-016",
-    title: "Navigating the European VC Landscape",
-    speaker: "Pierre Dubois",
-    company: "Index Ventures",
-    stage: "Founder Stage",
+    title: "Scaling Engineering Teams",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Focus Stage",
     day: 2,
-    time: "11:00",
-    topics: ["Fundraising", "VC", "Europe"]
+    time: "10:00",
+    topics: ["Engineering", "Scaling"]
   },
   {
     id: "htw-017",
-    title: "Building AI-First Products",
-    speaker: "Lisa Wang",
-    company: "OpenAI",
-    stage: "AI & Innovation Stage",
+    title: "AI & Machine Learning Applications",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Focus Stage",
     day: 2,
     time: "14:00",
-    topics: ["AI", "Product Development", "Innovation"]
+    topics: ["AI", "Machine Learning"]
   },
   {
     id: "htw-018",
-    title: "Data-Driven Decision Making",
-    speaker: "Tom Baker",
-    company: "Datadog",
+    title: "Sales & Customer Success",
+    speaker: "TBA",
+    company: "TBA",
     stage: "Build & Grow Stage",
     day: 2,
-    time: "14:00",
-    topics: ["Data", "Analytics", "Product Management"]
+    time: "15:00",
+    topics: ["Sales", "Customer Success"]
   },
   {
     id: "htw-019",
-    title: "Remote Team Building Best Practices",
-    speaker: "Nina Patel",
-    company: "GitLab",
-    stage: "Founder Stage",
+    title: "Startup Ecosystem Roundtable",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Startup Stage",
     day: 2,
-    time: "14:00",
-    topics: ["Remote Work", "Team Building", "Culture"]
+    time: "15:00",
+    topics: ["Startups", "Ecosystem"]
   },
   {
     id: "htw-020",
-    title: "Closing Keynote: The Next Decade of Innovation",
-    speaker: "Alex Rivera",
-    company: "Y Combinator",
-    stage: "Main Stage",
+    title: "Closing Keynote",
+    speaker: "TBA",
+    company: "TBA",
+    stage: "Broadcast Room",
     day: 2,
     time: "17:00",
-    topics: ["Keynote", "Innovation", "Future"]
+    topics: ["Keynote", "Closing"]
   }
 ];
 
 export const STAGES = [
   "All Stages",
-  "Main Stage",
   "Build & Grow Stage",
-  "AI & Innovation Stage",
-  "Founder Stage"
+  "Startup Stage",
+  "Focus Stage",
+  "Broadcast Room"
 ];

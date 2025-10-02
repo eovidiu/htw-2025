@@ -5,62 +5,96 @@ import PhotoCapture from './components/PhotoCapture';
 import ContentFeed from './components/ContentFeed';
 import PhotoViewer from './components/PhotoViewer';
 import ExportButton from './components/ExportButton';
+import ProcessingIndicator from './components/ProcessingIndicator';
+import ErrorModal from './components/ErrorModal';
 import { loadCaptures, addCapture, updateCapture, deleteCapture as deleteStorageCapture, reorderCaptures } from './utils/storage';
 import { savePhoto, deletePhoto } from './utils/indexedDB';
 import { compressImage } from './utils/imageCompression';
+import { captureQueue } from './utils/captureQueue';
 
 function App() {
   const [captures, setCaptures] = useState([]);
   const [showTextCapture, setShowTextCapture] = useState(false);
   const [showPhotoCapture, setShowPhotoCapture] = useState(false);
   const [viewingPhoto, setViewingPhoto] = useState(null);
+  const [queueState, setQueueState] = useState({ active: 0, max: 5, canAddMore: true });
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     // Load captures on mount
     const loadedCaptures = loadCaptures();
     setCaptures(loadedCaptures);
+
+    // Subscribe to queue state changes
+    const handleQueueChange = (state) => {
+      setQueueState(state);
+    };
+
+    captureQueue.addListener(handleQueueChange);
+
+    return () => {
+      captureQueue.removeListener(handleQueueChange);
+    };
   }, []);
 
   const handleAddText = () => {
+    if (!queueState.canAddMore) {
+      setError(`Too many items being processed. Please wait for current uploads to complete (${queueState.active}/${queueState.max}).`);
+      return;
+    }
     setShowTextCapture(true);
   };
 
-  const handleSaveText = (text) => {
-    const capture = addCapture({
-      type: 'text',
-      text
-    });
-    setCaptures([capture, ...captures]);
-    setShowTextCapture(false);
+  const handleSaveText = async (text) => {
+    try {
+      await captureQueue.addCapture(async () => {
+        const capture = addCapture({
+          type: 'text',
+          text
+        });
+        setCaptures([capture, ...captures]);
+      });
+      setShowTextCapture(false);
+    } catch (error) {
+      console.error('Error saving text:', error);
+      setError(error.message);
+      setShowTextCapture(false);
+    }
   };
 
   const handleAddPhoto = () => {
+    if (!queueState.canAddMore) {
+      setError(`Too many items being processed. Please wait for current uploads to complete (${queueState.active}/${queueState.max}).`);
+      return;
+    }
     setShowPhotoCapture(true);
   };
 
   const handlePhotoCapture = async (file) => {
     try {
-      // Compress the image
-      const compressedBlob = await compressImage(file);
+      await captureQueue.addCapture(async () => {
+        // Compress the image
+        const compressedBlob = await compressImage(file);
 
-      // Create capture entry
-      const capture = addCapture({
-        type: 'photo',
-        photoId: null // Will be set after saving
+        // Create capture entry
+        const capture = addCapture({
+          type: 'photo',
+          photoId: null // Will be set after saving
+        });
+
+        // Save photo to IndexedDB
+        const photoId = capture.id;
+        await savePhoto(photoId, compressedBlob);
+
+        // Update capture with photoId
+        const updatedCapture = updateCapture(capture.id, { photoId });
+
+        setCaptures([updatedCapture, ...captures]);
       });
-
-      // Save photo to IndexedDB
-      const photoId = capture.id;
-      await savePhoto(photoId, compressedBlob);
-
-      // Update capture with photoId
-      const updatedCapture = updateCapture(capture.id, { photoId });
-
-      setCaptures([updatedCapture, ...captures]);
       setShowPhotoCapture(false);
     } catch (error) {
       console.error('Error capturing photo:', error);
-      alert('Failed to save photo. Please try again.');
+      setError(error.message || 'Failed to save photo. Please try again.');
       setShowPhotoCapture(false);
     }
   };
@@ -100,7 +134,13 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CaptureButtons onAddText={handleAddText} onAddPhoto={handleAddPhoto} />
+      <CaptureButtons
+        onAddText={handleAddText}
+        onAddPhoto={handleAddPhoto}
+        disabled={!queueState.canAddMore}
+        processingCount={queueState.active}
+        maxProcessing={queueState.max}
+      />
 
       <div className="px-4">
         <ExportButton captures={captures} />
@@ -132,6 +172,18 @@ function App() {
         <PhotoViewer
           photoUrl={viewingPhoto}
           onClose={() => setViewingPhoto(null)}
+        />
+      )}
+
+      {/* Processing Indicator */}
+      <ProcessingIndicator active={queueState.active} max={queueState.max} />
+
+      {/* Error Modal */}
+      {error && (
+        <ErrorModal
+          title="Processing Limit Reached"
+          message={error}
+          onClose={() => setError(null)}
         />
       )}
     </div>
